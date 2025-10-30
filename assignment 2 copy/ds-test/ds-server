@@ -1,0 +1,32 @@
+#!/bin/sh
+set -eu
+args=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -c)
+      shift
+      args="$args -c$1"
+      ;;
+    -p)
+      shift
+      args="$args -p$1"
+      ;;
+    -v)
+      shift
+      args="$args -v$1"
+      ;;
+    -n)
+      args="$args -n"
+      ;;
+    -c*|-p*|-v*)
+      args="$args $1"
+      ;;
+    *)
+      args="$args $1"
+      ;;
+  esac
+  shift || true
+done
+
+echo "[Wrapper] Launching: $(dirname "$0")/ds-server.real$args" >&2
+exec "$(dirname "$0")/ds-server.real"$args
